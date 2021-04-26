@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
@@ -35,26 +34,30 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
-        objectType = "pets.HelloWorldObjects"
+        objectType = "pets.Owners"
 )
-public class HelloWorldObjects {
+public class Owners {
 
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public HelloWorldObject create(
+    public Owner create(
             @Parameter(maxLength = 40)
-            @ParameterLayout(named = "Name")
-            final String name) {
-        return repositoryService.persist(new HelloWorldObject(name));
+            final String lastName,
+            @Parameter(maxLength = 40)
+            final String firstName) {
+        return repositoryService.persist(new Owner(lastName, firstName));
     }
 
     @Action(semantics = SemanticsOf.SAFE)
     @MemberOrder(sequence = "2")
-    public List<HelloWorldObject> findByName(final String name) {
-        TypesafeQuery<HelloWorldObject> q = isisJdoSupport.newTypesafeQuery(HelloWorldObject.class);
-        final QHelloWorldObject cand = QHelloWorldObject.candidate();
+    public List<Owner> findByName(
+            final String name) {
+        TypesafeQuery<Owner> q = isisJdoSupport.newTypesafeQuery(Owner.class);
+        final QOwner cand = QOwner.candidate();
         q = q.filter(
-                cand.name.indexOf(q.stringParameter("name")).ne(-1)
+                cand.lastName.indexOf(q.stringParameter("name")).ne(-1).or(
+                cand.firstName.indexOf(q.stringParameter("name")).ne(-1)
+                )
         );
         return q.setParameter("name", name)
                 .executeList();
@@ -62,8 +65,8 @@ public class HelloWorldObjects {
 
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "3")
-    public List<HelloWorldObject> listAll() {
-        return repositoryService.allInstances(HelloWorldObject.class);
+    public List<Owner> listAll() {
+        return repositoryService.allInstances(Owner.class);
     }
 
     @javax.inject.Inject

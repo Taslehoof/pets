@@ -22,13 +22,13 @@
         <mb3:menu>
             <mb3:named>Hello World Objects</mb3:named>
             <mb3:section>
-                <mb3:serviceAction objectType="pets.HelloWorldObjects" id="create">
+                <mb3:serviceAction objectType="pets.Owner" id="create">
                     <cpt:named>Create</cpt:named>
                 </mb3:serviceAction>
-                <mb3:serviceAction objectType="pets.HelloWorldObjects" id="findByName">
+                <mb3:serviceAction objectType="pets.Owner" id="findByName">
                     <cpt:named>Find By Name</cpt:named>
                 </mb3:serviceAction>
-                <mb3:serviceAction objectType="pets.HelloWorldObjects" id="listAll">
+                <mb3:serviceAction objectType="pets.Owner" id="listAll">
                     <cpt:named>List All</cpt:named>
                 </mb3:serviceAction>
             </mb3:section>

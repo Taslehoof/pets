@@ -22,19 +22,21 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HelloWorldObjectTest_updateName {
+public class OwnerTest_updateName {
 
     @Test
     public void happy_case() throws Exception {
         // given
-        final HelloWorldObject object = new HelloWorldObject("Foo");
-        assertThat(object.getName()).isEqualTo("Foo");
+        final Owner object = new Owner("Smith","John");
+        assertThat(object.getFirstName()).isEqualTo("Smith");
+        assertThat(object.getLastName()).isEqualTo("John");
 
         // when
-        object.updateName("Bar");
+        object.updateName("Jones", "Chuck");
 
         // then
-        assertThat(object.getName()).isEqualTo("Bar");
+        assertThat(object.getFirstName()).isEqualTo("Jones");
+        assertThat(object.getLastName()).isEqualTo("Chuck");
     }
 
 }
