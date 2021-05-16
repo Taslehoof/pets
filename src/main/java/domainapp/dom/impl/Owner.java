@@ -18,29 +18,20 @@
  */
 package domainapp.dom.impl;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.collect.ComparisonChain;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.Auditing;
-import org.apache.isis.applib.annotation.CommandReification;
-import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
+import org.apache.isis.applib.spec.AbstractSpecification;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "pets" )
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
@@ -64,6 +55,30 @@ public class Owner implements Comparable<Owner> {
     @Property(hidden = Where.EVERYWHERE)
     @Getter @Setter
     private String firstName;
+
+    public static class PhoneNumberSpec extends AbstractSpecification<String> {
+        @Override
+        public String satisfiesSafely(final String phoneNumber) {
+            Matcher matcher = Pattern.compile("[+]?[0-9 ]+").matcher(phoneNumber);
+            return matcher.matches() ? null :
+                    "Specify only numbers and spaces, optionally prefixed with '+'.  " +
+                            "For example, '+353 1 555 1234', or '07123 456789'";
+        }
+    }
+    @javax.jdo.annotations.Column(allowsNull = "true", length = 15)
+    @Property(editing = Editing.ENABLED,
+            mustSatisfy = PhoneNumberSpec.class
+    )
+    @Getter @Setter
+    private String phoneNumber;
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = 50)
+    @Property(editing = Editing.ENABLED)
+    @Getter @Setter
+    private String emailAddress;
+    public String validateEmailAddress(String emailAddress) {
+        return emailAddress.contains("@") ? null : "Email address must contain a '@'";
+    }
 
     public String title() {
         return getLastName() + ", " + getFirstName().substring(0,1);

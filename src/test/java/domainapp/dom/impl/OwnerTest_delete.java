@@ -55,7 +55,7 @@ public class OwnerTest_delete {
 
         // expecting
         context.checking(new Expectations() {{
-            allowing(mockTitleService).titleOf(object); will(returnValue("Smith, J"));
+            allowing(mockTitleService).titleOf(object); will(returnValue("Smith, J."));
 
             oneOf(mockMessageService).informUser(with(containsString("'Smith, J.' deleted")));
             oneOf(mockRepositoryService).removeAndFlush(object);

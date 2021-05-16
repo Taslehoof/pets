@@ -18,19 +18,12 @@
  */
 package domainapp.dom.impl;
 
-import java.util.List;
-
-import org.datanucleus.query.typesafe.TypesafeQuery;
-
-import org.apache.isis.applib.annotation.Action;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Parameter;
-import org.apache.isis.applib.annotation.RestrictTo;
-import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.datanucleus.query.typesafe.TypesafeQuery;
+
+import java.util.List;
 
 @DomainService(
         nature = NatureOfService.VIEW_MENU_ONLY,
@@ -44,8 +37,16 @@ public class Owners {
             @Parameter(maxLength = 40)
             final String lastName,
             @Parameter(maxLength = 40)
-            final String firstName) {
-        return repositoryService.persist(new Owner(lastName, firstName));
+            final String firstName,
+            @Parameter(
+                    mustSatisfy = Owner.PhoneNumberSpec.class,
+                    maxLength = 15,
+                    optionality = Optionality.OPTIONAL
+            )
+            final String phoneNumber) {
+        Owner owner = new Owner(lastName, firstName);
+        owner.setPhoneNumber(phoneNumber);
+        return repositoryService.persist(owner);
     }
 
     @Action(semantics = SemanticsOf.SAFE)
