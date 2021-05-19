@@ -29,7 +29,10 @@ import org.apache.isis.applib.spec.AbstractSpecification;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +47,15 @@ public class Owner implements Comparable<Owner> {
     public Owner(final String lastName, final String firstName) {
         this.lastName = lastName;
         this.firstName = firstName;
+    }
+
+    public String title() {
+        return getLastName() + ", " + getFirstName().substring(0,1);
+    }
+
+    @Property(notPersisted = true)
+    public String getName() {
+        return getFirstName() + " " + getLastName();
     }
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
@@ -65,6 +77,7 @@ public class Owner implements Comparable<Owner> {
                             "For example, '+353 1 555 1234', or '07123 456789'";
         }
     }
+
     @javax.jdo.annotations.Column(allowsNull = "true", length = 15)
     @Property(editing = Editing.ENABLED,
             mustSatisfy = PhoneNumberSpec.class
@@ -80,21 +93,10 @@ public class Owner implements Comparable<Owner> {
         return emailAddress.contains("@") ? null : "Email address must contain a '@'";
     }
 
-    public String title() {
-        return getLastName() + ", " + getFirstName().substring(0,1);
-    }
-
-    @Property(notPersisted = true)
-    public String getName() {
-        return getFirstName() + " " + getLastName();
-    }
-
     @javax.jdo.annotations.Column(allowsNull = "true", length = 4000)
     @Property(editing = Editing.ENABLED)
     @Getter @Setter
     private String notes;
-    public String getNotes() { return notes; }
-    public void setNotes(final String notes) { this.notes = notes; }
 
 
     @Action(semantics = SemanticsOf.IDEMPOTENT, command = CommandReification.ENABLED, publishing = Publishing.ENABLED)
@@ -114,7 +116,6 @@ public class Owner implements Comparable<Owner> {
         return getFirstName();
     }
 
-
     @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
     public void delete() {
         final String title = titleService.titleOf(this);
@@ -122,9 +123,31 @@ public class Owner implements Comparable<Owner> {
         repositoryService.removeAndFlush(this);
     }
 
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT,
+            associateWith = "pets"
+    )
+    public Pet newPet(final String name, final PetSpecies petSpecies) {
+        return repositoryService.persist(new Pet(this, name, petSpecies));
+    }
+
+    @Action(
+            semantics = SemanticsOf.NON_IDEMPOTENT,
+            associateWith = "pets", associateWithSequence = "2"
+    )
+    public Owner removePet(Pet pet) {
+        repositoryService.removeAndFlush(pet);
+        return this;
+    }
+
+    @Persistent(mappedBy = "owner", dependentElement = "true")
+    @Collection()
+    @Getter @Setter
+    private SortedSet<Pet> pets = new TreeSet<Pet>();
+
     @Override
     public String toString() {
-        return getName();
+        return getLastName();
     }
 
     @Override
@@ -147,6 +170,4 @@ public class Owner implements Comparable<Owner> {
     @javax.jdo.annotations.NotPersistent
     @javax.inject.Inject
     MessageService messageService;
-
-
 }
