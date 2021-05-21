@@ -18,6 +18,7 @@
  */
 package domainapp.dom.impl;
 
+import domainapp.dom.impl.pets.dom.Owner;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

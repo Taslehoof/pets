@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package domainapp.dom.impl;
+package domainapp.dom.impl.pets.dom;
 
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
@@ -54,7 +54,7 @@ public class Owners {
     public List<Owner> findByName(
             final String name) {
         TypesafeQuery<Owner> q = isisJdoSupport.newTypesafeQuery(Owner.class);
-        final QOwner cand = QOwner.candidate();
+        final domainapp.dom.impl.pets.dom.QOwner cand = domainapp.dom.impl.pets.dom.QOwner.candidate();
         q = q.filter(
                 cand.lastName.indexOf(q.stringParameter("name")).ne(-1).or(
                 cand.firstName.indexOf(q.stringParameter("name")).ne(-1)

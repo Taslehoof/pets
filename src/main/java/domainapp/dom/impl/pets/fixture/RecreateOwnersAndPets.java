@@ -1,5 +1,9 @@
-package domainapp.dom.impl;
+package domainapp.dom.impl.pets.fixture;
 
+import domainapp.dom.impl.pets.dom.Owner;
+import domainapp.dom.impl.pets.dom.Owners;
+import domainapp.dom.impl.pets.dom.Pet;
+import domainapp.dom.impl.pets.dom.PetSpecies;
 import lombok.Data;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;

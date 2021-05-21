@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package domainapp.dom.impl;
+package domainapp.dom.impl.pets.dom;
 
 import com.google.common.collect.ComparisonChain;
 import lombok.Getter;
@@ -161,13 +161,16 @@ public class Owner implements Comparable<Owner> {
 
     @javax.jdo.annotations.NotPersistent
     @javax.inject.Inject
+    public
     RepositoryService repositoryService;
 
     @javax.jdo.annotations.NotPersistent
     @javax.inject.Inject
+    public
     TitleService titleService;
 
     @javax.jdo.annotations.NotPersistent
     @javax.inject.Inject
+    public
     MessageService messageService;
 }

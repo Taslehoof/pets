@@ -18,6 +18,7 @@
  */
 package domainapp.dom.impl;
 
+import domainapp.dom.impl.pets.dom.Owner;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Rule;

@@ -1,6 +1,7 @@
-package domainapp.dom.impl;
+package domainapp.dom.impl.visits.dom;
 
 import com.google.common.collect.ComparisonChain;
+import domainapp.dom.impl.pets.dom.Pet;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
