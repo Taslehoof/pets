@@ -1,4 +1,4 @@
-package domainapp.dom.impl.visits;
+package domainapp.dom.impl.visits.integtests;
 
 
 import org.joda.time.LocalDateTime;

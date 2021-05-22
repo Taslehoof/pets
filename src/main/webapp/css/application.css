@@ -17,3 +17,11 @@
  *  under the License.
  */
 
+ .domainapp-modules-impl-dashboard-Dashboard .entityCollection .overdue .Visit-reason {
+     display: none;
+ }
+
+.entityCollectiion .domainapp-modules-impl-visits-dom-Visit .paid {
+	text-decorations: line-through;
+	color: lightgrey;
+}

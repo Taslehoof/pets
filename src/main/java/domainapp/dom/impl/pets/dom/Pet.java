@@ -35,6 +35,10 @@ public class Pet implements Comparable<Pet> {
                 getName(), getPetSpecies().name().toLowerCase(), getOwner().getName());
     }
 
+    public String iconName() {
+        return getPetSpecies().name().toLowerCase();
+    }
+
     @javax.jdo.annotations.Column(allowsNull = "false", name = "ownerId")
     @Property(editing = Editing.DISABLED)
     @Getter @Setter

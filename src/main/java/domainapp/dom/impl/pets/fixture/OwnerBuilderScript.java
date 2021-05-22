@@ -5,6 +5,7 @@ import domainapp.dom.impl.pets.dom.Owner;
 import domainapp.dom.impl.pets.dom.Owners;
 import domainapp.dom.impl.pets.dom.Pet;
 import domainapp.dom.impl.pets.dom.PetSpecies;
+import domainapp.dom.impl.visits.dom.Visit;
 import domainapp.dom.impl.visits.contributions.Pet_bookVisit;
 import lombok.Data;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import org.isisaddons.module.fakedata.dom.FakeDataService;
 import org.joda.time.LocalDateTime;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
 @lombok.experimental.Accessors(chain = true)
@@ -60,7 +62,12 @@ public class OwnerBuilderScript extends BuilderScriptAbstract<Owner, OwnerBuilde
                     LocalDateTime someTimeInPast = someRandomTimeInPast();
                     String someReason = someReason();
                     setTimeTo(ec, someTimeInPast);
-                    wrap(mixin(Pet_bookVisit.class, pet)).act(someTimeInPast.plusDays(3), someReason);
+                    Visit visit = wrap(mixin(Pet_bookVisit.class, pet)).act(someTimeInPast.plusDays(3), someReason);
+                    wrap(visit).enterOutcome(someDiagnosis(), someCost());
+                    if(i != petDatum.numberOfVisits - 1) {
+                        setTimeTo(ec, someTimeInPast.plusDays(fakeDataService.ints().between(10,30)));
+                        wrap(visit).paid();
+                    }
                 }
             }
         } finally {
@@ -84,6 +91,14 @@ public class OwnerBuilderScript extends BuilderScriptAbstract<Owner, OwnerBuilde
 
     private void setTimeTo(final ExecutionContext ec, final LocalDateTime ldt) {
         ec.executeChild(this, new TickingClockFixture().setDate(ldt.toString("yyyyMMddhhmm")));
+    }
+
+    private String someDiagnosis() {
+        return fakeDataService.lorem().paragraph(fakeDataService.ints().between(1, 3));
+    }
+
+    private BigDecimal someCost() {
+        return new BigDecimal(20.00 + fakeDataService.doubles().upTo(30.00d));
     }
 
     @Inject

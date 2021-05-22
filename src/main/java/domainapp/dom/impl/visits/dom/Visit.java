@@ -5,8 +5,11 @@ import domainapp.dom.impl.pets.dom.Pet;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.joda.time.LocalDateTime;
+import org.joda.time.LocalDate;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -58,6 +61,17 @@ public class Visit implements Comparable<Visit> {
     @Getter @Setter
     private BigDecimal cost;
 
+    @Action(semantics = SemanticsOf.IDEMPOTENT)
+    public Visit paid() {
+        paidOn = clockService.now();
+        return this;
+    }
+
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(editing = Editing.DISABLED, editingDisabledReason = "Use 'paid' action")
+    @Getter @Setter
+    private LocalDate paidOn;
+
     public Visit(final Pet pet, final LocalDateTime visitAt, final String reason) {
         this.pet = pet;
         this.visitAt = visitAt;
@@ -72,6 +86,11 @@ public class Visit implements Comparable<Visit> {
                 getPet().getName());
     }
 
+    public String cssClass() {
+        boolean isPaid = getPaidOn() != null;
+        return isPaid ? "paid": null;
+    }
+
     @Override
     public String toString() {
         return getVisitAt().toString("yyyy-MM-dd hh:mm");
@@ -84,4 +103,7 @@ public class Visit implements Comparable<Visit> {
                 .compare(this.getPet(), other.getPet())
                 .result();
     }
+
+    @Inject
+    ClockService clockService;
 }

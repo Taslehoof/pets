@@ -1,4 +1,4 @@
-package domainapp.dom.impl.visits;
+package domainapp.dom.impl.visits.integtests;
 
 import domainapp.dom.impl.PetClinicModuleIntegTestAbstract;
 import domainapp.dom.impl.pets.dom.Owner;
