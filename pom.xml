@@ -36,6 +36,8 @@
     <properties>
         <isis.version>1.16.2</isis.version>
 
+        <incode-platform.version>1.16.2</incode-platform.version>
+
         <compiler-plugin.source>1.8</compiler-plugin.source>
         <compiler-plugin.target>1.8</compiler-plugin.target>
         <compiler-plugin.compilerArgument>-parameters</compiler-plugin.compilerArgument>
@@ -153,6 +155,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-wrapper</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.isis.mavendeps</groupId>
             <artifactId>isis-mavendeps-webapp</artifactId>
             <type>pom</type>
@@ -178,11 +185,11 @@
         </dependency>
 
         <!--  https://mvnrepository.com/artifact/org.postgresql/postgresql  -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.19</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.jmock</groupId>
             <artifactId>jmock</artifactId>
@@ -209,12 +216,15 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
         </dependency>
-
-
-        <!--<dependency>
+        <dependency>
+            <groupId>org.isisaddons.module.fakedata</groupId>
+            <artifactId>isis-module-fakedata-dom</artifactId>
+            <version>${incode-platform.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 

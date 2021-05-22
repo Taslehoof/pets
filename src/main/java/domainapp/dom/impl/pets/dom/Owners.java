@@ -64,6 +64,22 @@ public class Owners {
                 .executeList();
     }
 
+    @Programmatic
+    public Owner findByLastNameAndFirstName(
+            final String lastName,
+            final String firstName) {
+        TypesafeQuery<Owner> q = isisJdoSupport.newTypesafeQuery(Owner.class);
+        final domainapp.dom.impl.pets.dom.QOwner cand = domainapp.dom.impl.pets.dom.QOwner.candidate();
+        q = q.filter(
+                cand.lastName.eq(q.stringParameter("lastName")).and(
+                        cand.firstName.eq(q.stringParameter("firstName"))
+                )
+        );
+        return q.setParameter("lastName", lastName)
+                .setParameter("firstName", firstName)
+                .executeUnique();
+    }
+
     @Action(semantics = SemanticsOf.SAFE, restrictTo = RestrictTo.PROTOTYPING)
     @MemberOrder(sequence = "3")
     public List<Owner> listAll() {
