@@ -2,6 +2,7 @@ package domainapp.dom.impl.visits.dom;
 
 
 import domainapp.dom.impl.pets.dom.Pet;
+import domainapp.dom.impl.pets.dom.Owner;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -36,8 +37,19 @@ public class Visits {
                 .executeList();
     }
 
-    public String disablePaid() {
-        return getPaidOn() != null ? "Already paid": null;
+    @Programmatic
+    public java.util.List<Visit> findNotPaidBy(Owner owner) {
+        TypesafeQuery<Visit> q = isisJdoSupport.newTypesafeQuery(Visit.class);
+        final QVisit cand = QVisit.candidate();
+        q = q.filter(
+                cand.paidOn.eq(q.parameter("paidOn", LocalDateTime.class)
+                ).and(
+                        cand.pet.owner.eq(q.parameter("owner", Owner.class))
+                )
+        );
+        return q.setParameter("paidOn", null)
+                .setParameter("owner", owner)
+                .executeList();
     }
 
     @javax.inject.Inject

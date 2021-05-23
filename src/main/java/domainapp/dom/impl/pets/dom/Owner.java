@@ -22,6 +22,7 @@ import com.google.common.collect.ComparisonChain;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.eventbus.ActionDomainEvent;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
@@ -116,13 +117,16 @@ public class Owner implements Comparable<Owner> {
         return getFirstName();
     }
 
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
+    public static class Delete extends ActionDomainEvent<Owner> {}
+    @Action(
+            domainEvent = Delete.class,
+            semantics = SemanticsOf.NON_IDEMPOTENT
+    )
     public void delete() {
         final String title = titleService.titleOf(this);
         messageService.informUser(String.format("'%s' deleted", title));
         repositoryService.removeAndFlush(this);
     }
-
     @Action(
             semantics = SemanticsOf.NON_IDEMPOTENT,
             associateWith = "pets"
